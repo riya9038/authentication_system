@@ -1,0 +1,39 @@
+<html>
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+    <%- style %>
+  </head>
+  <body>
+    <%- body %> <%- script %>
+    <script>
+      <% if(flash.success && flash.success.length>0){%>
+          new Noty({
+              theme: 'relax',
+              text: "<%= flash.success %>",
+              layout: 'topRight',
+              type: 'success',
+              timeout: 1500
+
+          }).show();
+      <%}%>
+
+      <% if(flash.error && flash.error.length>0){%>
+          new Noty({
+              theme: 'relax',
+              text: "<%= flash.error %>",
+              layout: 'topRight',
+              type: 'error',
+              timeout: 1500
+
+          }).show();
+      <%}%>
+    </script>
+  </body>
+</html>

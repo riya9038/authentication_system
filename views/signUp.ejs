@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="/css/signIn.css" />
+<form action="/user/create" method="POST">
+  <h2>Welcome User</h2>
+  <h4>Sign Up using NodeJS Authentication</h4>
+  <input type="text" name="name" placeholder="Enter your name" required /><br />
+  <input type="email" name="email" placeholder="Enter email" /><br />
+  <input type="password" name="password" placeholder="Enter password" /><br />
+  <input
+    type="password"
+    name="confirm_password"
+    placeholder="Enter confirm password"
+  /><br />
+  <div class="g-recaptcha" data-sitekey="6LeqG6UdAAAAAOVqQxfVOj-qClF_G7WwkhCe1z-Z"></div>
+  <input type="submit" id="sign" value="Sign Up" />
+  <p>or</p>
+  <div>
+    <img
+      src="https://bsmedia.business-standard.com/_media/bs/img/about-page/1562577931.jpg"
+      alt="google"
+    />
+    <a href="/user/auth/google">Sign Up using Google</a>
+  </div>
+  <p>
+    <a href="/user/signIn">Already have an account</a>
+  </p>
+</form>

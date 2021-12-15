@@ -1,0 +1,17 @@
+h2{
+    color: black';
+}
+main{
+    display: flex;
+    flex-direction: column;
+}
+input{
+    width:10%;
+}
+#reset{
+    width:5%;
+    height: 8%;;
+    margin:10px;
+    background-color: orange;
+    border-radius: 6px;;
+}
