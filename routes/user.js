@@ -12,7 +12,7 @@ router.get("/signIn", userController.signIn);
 router.get("/signOut", userController.destroySession);
 router.get("/reset", userController.reset);
 router.post("/resetEmail", userController.resetEmail);
-router.get("/resetPassword/:id", userController.resetPassword);
+router.get("/resetPassword", userController.resetPassword);
 router.post("/updatePassword", userController.updatePassword);
 router.get("/destroy", userController.destroySession);
 
@@ -30,7 +30,7 @@ router.get(
 router.get(
   "/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/user/signIn" }),
-  userController.createSession
+  userController.profile
 );
 
 module.exports = router;

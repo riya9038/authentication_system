@@ -1,8 +1,11 @@
 const User = require("../models/user");
+const NewUser = require("../models/resetUser");
 const fs = require("fs");
 const path = require("path");
 const resetPasswordMailer = require("../mailers/resetMail");
 const fetch= require('isomorphic-fetch');
+const crypto= require('crypto');
+const PasswordManager= require('../services/passwordManager');
 
 module.exports.profile = function (req, res) {
   User.findById(req.params.id, function (err, users) {
@@ -92,7 +95,7 @@ module.exports.create = function (req, res) {
         if (!user && google_response.success == true) {
           User.create(req.body, function (err, user) {
             if (err) {
-              console.log("error in finding the user");
+              console.log("error in creating the user",err);
               return;
             } else {
               return res.redirect("/user/signIn");
@@ -108,11 +111,13 @@ module.exports.create = function (req, res) {
 });
 }
 
-module.exports.createSession = function (req, res) {
+module.exports.createSession = async function (req, res) {
 
   const response_key = req.body["g-recaptcha-response"];
   const secret_key = "6LeqG6UdAAAAAFVXKKLfPtSpFUHYJlDLl6waV76p";
   const url =`https://www.google.com/recaptcha/api/siteverify?secret=${secret_key}&response=${response_key}`;
+  const existingUser= await User.findOne({email:req.body.email});
+  console.log("before session");
  
   // Making POST request to verify captcha
   fetch(url, {
@@ -123,6 +128,7 @@ module.exports.createSession = function (req, res) {
  
       // google_response is the object return by
       // google as a response
+      console.log("before session");
       if (google_response.success == true) {
         //   if captcha is verified
         console.log("creating session");
@@ -135,7 +141,9 @@ module.exports.createSession = function (req, res) {
     })
     .catch((error) => {
         // Some error while verify captcha
+        console.log("error",error);
       return res.json({ error });
+
     });
 };
 
@@ -145,28 +153,62 @@ module.exports.destroySession = function (req, res) {
   req.flash("success", "Logged out successfully");
   return res.redirect("/");
 };
+
+
 module.exports.reset = function (req, res) {
   return res.render("reset");
 };
+
+
 module.exports.resetEmail = async function (req, res) {
-  await User.findOne({ email: req.body.email }, function (err, user) {
-    if (err) {
-      console.log("error in finding the user");
-      return;
-    }
+  let user= await User.findOne({ email: req.body.email })
+    // if (err) {
+    //   console.log("error in finding the user");
+    //   return;
+    // }
     if (user) {
+
+      let newUser= await NewUser.create({
+        user: user.id,
+        key:crypto.randomBytes(20).toString('hex'),
+        isValid:true
+      })
+
+      let resetUser={
+        resetDb: newUser,
+        user: user
+      }
+      console.log("resetUser",resetUser);
       res.render("resetEmail");
-      resetPasswordMailer.newPassword(req.body.email);
+      resetPasswordMailer.newPassword(resetUser);
       req.flash("success", "Mail sent");
       console.log("mail sent", req.body.email);
-    } else {
+    }
+     else {
       return res.redirect("back");
     }
-  });
 };
-module.exports.resetPassword = function (req, res) {
-  return res.render("resetPassword");
+
+
+module.exports.resetPassword = async function (req, res) {
+  console.log("resetId:",req.query.id);
+  let resetUserDb=await NewUser.findOne({key:req.query.id});
+   console.log('resetUserId',resetUserDb);
+
+   if(resetUserDb.isValid==true)
+   {
+      resetUserDb.isValid=false;
+      resetUserDb.save();
+      console.log(resetUserDb.isValid);
+      return res.render("resetPassword");
+   }
+   else{
+    req.flash('error','Your link has expired!! Directing you to homepage');
+    res.redirect('/user/signIn');
+   }
 };
+
+
 module.exports.updatePassword = function (req, res) {
   User.findOne({ email: req.body.email }, function (err, user) {
     if (err) {
@@ -185,7 +227,8 @@ module.exports.updatePassword = function (req, res) {
       console.log("new password", req.body.confirm_password);
       req.flash("success", "Password reset successfully");
       return res.redirect("/user/signIn");
-    } else {
+    } 
+    else {
       req.flash("error", "Invalid User");
       return res.redirect("back");
     }

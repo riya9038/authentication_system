@@ -22,7 +22,8 @@ passport.use(
           console.log("error in google strategy-passport", err);
           return;
         }
-        console.log(accessToken, refreshToken);
+        console.log("accesstoken", accessToken);
+        console.log("refreshtoken",refreshToken);
         console.log(profile);
 
         if (user) {

@@ -1,14 +1,14 @@
 const nodemailer = require("../config/nodemailer");
 
-exports.newPassword = (email) => {
+exports.newPassword = (resetUser) => {
   let htmlString = nodemailer.renderTemplate(
-    { email: email },
+    { resetUser: resetUser },
     "/resetMail/reset-mail.ejs"
   );
   nodemailer.transporter.sendMail(
     {
       from: "9038riya@gmail.com",
-      to: email,
+      to: resetUser.user.email,
       subject: "Reset Password",
       html: htmlString,
     },

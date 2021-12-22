@@ -4,6 +4,8 @@ const LocalStrategy = require("passport-local").Strategy;
 
 const User = require("../models/user");
 
+const PasswordManager= require("../services/passwordManager");
+
 // authentication using passport
 passport.use(
   new LocalStrategy(
@@ -19,7 +21,7 @@ passport.use(
           return done(err);
         }
 
-        if (!user || user.password != password) {
+        if (!user || (!PasswordManager.compare(user.password,password))) {
           req.flash("error", "Invalid UserName|Password");
           return done(null, false);
         }

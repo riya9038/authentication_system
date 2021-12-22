@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const multer = require("multer");
 const path = require("path");
 const AVATAR_PATH = path.join("/uploads/users/avatars");
+const PasswordManager= require('../services/passwordManager');
 const UserSchema = new mongoose.Schema(
   {
     email: {
@@ -25,6 +26,15 @@ const UserSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+UserSchema.pre('save',async function(done){
+  if(this.isModified('password')){
+      const hashed=await PasswordManager.toHash(this.get('password'));
+      this.set('password',hashed);
+  }
+
+  done();
+})
 
 let storage = multer.diskStorage({
   destination: function (req, file, cb) {
