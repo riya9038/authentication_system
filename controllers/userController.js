@@ -6,6 +6,7 @@ const resetPasswordMailer = require("../mailers/resetMail");
 const fetch= require('isomorphic-fetch');
 const crypto= require('crypto');
 const PasswordManager= require('../services/passwordManager');
+const dotenv= require('dotenv').config();
 
 module.exports.profile = function (req, res) {
   User.findById(req.params.id, function (err, users) {
@@ -77,7 +78,7 @@ module.exports.create = function (req, res) {
 
   User.findOne({ email: req.body.email }, function (err, user) {
     const response_key = req.body["g-recaptcha-response"];
-    const secret_key = "6LeqG6UdAAAAAFVXKKLfPtSpFUHYJlDLl6waV76p";
+    const secret_key = process.env.SECRETKEY;
     const url =`https://www.google.com/recaptcha/api/siteverify?secret=${secret_key}&response=${response_key}`;
 
     if (err) {
@@ -114,7 +115,7 @@ module.exports.create = function (req, res) {
 module.exports.createSession = async function (req, res) {
 
   const response_key = req.body["g-recaptcha-response"];
-  const secret_key = "6LeqG6UdAAAAAFVXKKLfPtSpFUHYJlDLl6waV76p";
+  const secret_key = process.env.SECRETKEY;
   const url =`https://www.google.com/recaptcha/api/siteverify?secret=${secret_key}&response=${response_key}`;
   const existingUser= await User.findOne({email:req.body.email});
   console.log("before session");

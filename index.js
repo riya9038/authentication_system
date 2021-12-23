@@ -1,5 +1,6 @@
 const express = require("express");
-const port = 8000;
+const dotenv= require('dotenv').config();
+const port = process.env.PORT || 8000;
 const db = require("./config/mongoose");
 const User = require("./models/user");
 const passport = require("passport");
@@ -12,6 +13,7 @@ const customMware = require("./config/middleware");
 const multer = require("multer");
 const expressLayouts = require("express-ejs-layouts");
 const path = require("path");
+const config= require('dotenv').config();
 
 const app = express();
 app.use(express.urlencoded());
@@ -30,8 +32,7 @@ app.use(
     },
     store: MongoStore.create(
       {
-        mongoUrl:
-          "mongodb+srv://anshurai:anshurai1998@cluster0.trmqx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+        mongoUrl: "mongodb+srv://anshurai:anshurai1998@cluster0.trmqx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
         mongooseConnection: db,
         autoRemove: "disabled",
       },
