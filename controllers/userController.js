@@ -8,6 +8,7 @@ const crypto= require('crypto');
 const PasswordManager= require('../services/passwordManager');
 const dotenv= require('dotenv').config();
 
+//profile page of user
 module.exports.profile = function (req, res) {
   User.findById(req.params.id, function (err, users) {
     return res.render("user-profile", {
@@ -17,13 +18,13 @@ module.exports.profile = function (req, res) {
   });
 };
 
+//updating the details of the user
 module.exports.update = async function (req, res) {
   if (req.user.id == req.params.id) {
     try {
       let user = await User.findById(req.params.id);
 
       User.uploadedAvatar(req, res, function (err) {
-        console.log(req.file, "request");
         if (err) {
           console.log("***Error in Multer", err);
         }
@@ -43,7 +44,6 @@ module.exports.update = async function (req, res) {
       });
     } catch (err) {
       req.flash("error", "Error");
-      console.log(err);
       return res.redirect("back");
     }
   } else {
@@ -52,6 +52,7 @@ module.exports.update = async function (req, res) {
   }
 };
 
+//rendering the sign up form
 module.exports.signUp = function (req, res) {
   if (req.isAuthenticated()) {
     return res.redirect("/user/profile");
@@ -61,6 +62,7 @@ module.exports.signUp = function (req, res) {
   });
 };
 
+//rendering the sign in form
 module.exports.signIn = function (req, res) {
   if (req.isAuthenticated()) {
     return res.redirect("/user/profile");
@@ -70,6 +72,7 @@ module.exports.signIn = function (req, res) {
   });
 };
 
+//creating the user for the first time
 module.exports.create = function (req, res) {
   if (req.body.password != req.body.confirm_password){
     req.flash("error", "Passwords dont match");
@@ -91,8 +94,6 @@ module.exports.create = function (req, res) {
       .then((response) => response.json())
       .then((google_response) => {
    
-        // google_response is the object return by
-        // google as a response
         if (!user && google_response.success == true) {
           User.create(req.body, function (err, user) {
             if (err) {
@@ -112,27 +113,22 @@ module.exports.create = function (req, res) {
 });
 }
 
+//creating the session for the user who logs in
 module.exports.createSession = async function (req, res) {
 
   const response_key = req.body["g-recaptcha-response"];
   const secret_key = process.env.SECRETKEY;
   const url =`https://www.google.com/recaptcha/api/siteverify?secret=${secret_key}&response=${response_key}`;
   const existingUser= await User.findOne({email:req.body.email});
-  console.log("before session");
  
-  // Making POST request to verify captcha
   fetch(url, {
     method: "post",
   })
     .then((response) => response.json())
     .then((google_response) => {
- 
-      // google_response is the object return by
-      // google as a response
-      console.log("before session");
+
       if (google_response.success == true) {
         //   if captcha is verified
-        console.log("creating session");
         req.flash("success", "Logged in successfully");
         return res.redirect("/user/profile");
       } else {
@@ -142,31 +138,26 @@ module.exports.createSession = async function (req, res) {
     })
     .catch((error) => {
         // Some error while verify captcha
-        console.log("error",error);
       return res.json({ error });
 
     });
 };
 
-
+//logging the user out of the session
 module.exports.destroySession = function (req, res) {
   req.logout();
   req.flash("success", "Logged out successfully");
   return res.redirect("/");
 };
 
-
+//rendering the reset page
 module.exports.reset = function (req, res) {
   return res.render("reset");
 };
 
-
+//sending the mail to the user with the reset link
 module.exports.resetEmail = async function (req, res) {
   let user= await User.findOne({ email: req.body.email })
-    // if (err) {
-    //   console.log("error in finding the user");
-    //   return;
-    // }
     if (user) {
 
       let newUser= await NewUser.create({
@@ -179,28 +170,24 @@ module.exports.resetEmail = async function (req, res) {
         resetDb: newUser,
         user: user
       }
-      console.log("resetUser",resetUser);
       res.render("resetEmail");
       resetPasswordMailer.newPassword(resetUser);
       req.flash("success", "Mail sent");
-      console.log("mail sent", req.body.email);
     }
      else {
       return res.redirect("back");
     }
 };
 
-
+//rendering the reset form page for chnaging the password
 module.exports.resetPassword = async function (req, res) {
-  console.log("resetId:",req.query.id);
+
   let resetUserDb=await NewUser.findOne({key:req.query.id});
-   console.log('resetUserId',resetUserDb);
 
    if(resetUserDb.isValid==true)
    {
       resetUserDb.isValid=false;
       resetUserDb.save();
-      console.log(resetUserDb.isValid);
       return res.render("resetPassword");
    }
    else{
@@ -209,7 +196,7 @@ module.exports.resetPassword = async function (req, res) {
    }
 };
 
-
+//updating the reset password in the database
 module.exports.updatePassword = function (req, res) {
   User.findOne({ email: req.body.email }, function (err, user) {
     if (err) {
@@ -221,11 +208,8 @@ module.exports.updatePassword = function (req, res) {
         req.flash("error", "Passwords dont match");
         return res.redirect("back");
       }
-      console.log("old password", user.password);
-      console.log("user", user);
       user.password = req.body.confirm_password;
       user.save();
-      console.log("new password", req.body.confirm_password);
       req.flash("success", "Password reset successfully");
       return res.redirect("/user/signIn");
     } 

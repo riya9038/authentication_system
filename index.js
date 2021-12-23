@@ -15,6 +15,7 @@ const expressLayouts = require("express-ejs-layouts");
 const path = require("path");
 const config= require('dotenv').config();
 
+//firing the app and setting up views
 const app = express();
 app.use(express.urlencoded());
 app.set("view engine", "ejs");
@@ -32,7 +33,7 @@ app.use(
     },
     store: MongoStore.create(
       {
-        mongoUrl: "mongodb+srv://anshurai:anshurai1998@cluster0.trmqx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+        mongoUrl: process.env.mongoURI,
         mongooseConnection: db,
         autoRemove: "disabled",
       },
@@ -43,6 +44,7 @@ app.use(
   })
 );
 
+//setting up passport for authentication
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(passport.setAuthenticatedUser);
@@ -53,13 +55,17 @@ app.use(expressLayouts);
 app.set("layout extractStyles", true);
 app.set("layout extractScripts", true);
 
+//middleware for noty
 app.use(flash());
 app.use(customMware.setFlash);
 
+//middleware for setting up the static files
 app.use(express.static("./assets"));
 
+//setting up the routes
 app.use("/", require("./routes"));
 
+//starting the app and listening to port
 app.listen(port, function (err) {
   if (err) {
     console.log(`Error in running the server:${err}`);
