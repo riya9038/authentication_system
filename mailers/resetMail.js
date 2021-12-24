@@ -18,7 +18,6 @@ exports.newPassword = (resetUser) => {
         return;
       }
 
-      console.log("Message sent", info);
       return;
     }
   );

@@ -152,7 +152,9 @@ module.exports.destroySession = function (req, res) {
 
 //rendering the reset page
 module.exports.reset = function (req, res) {
-  return res.render("reset");
+  return res.render("reset", {
+    title: "Reset",
+  });
 };
 
 //sending the mail to the user with the reset link
@@ -170,9 +172,12 @@ module.exports.resetEmail = async function (req, res) {
         resetDb: newUser,
         user: user
       }
-      res.render("resetEmail");
+      
       resetPasswordMailer.newPassword(resetUser);
       req.flash("success", "Mail sent");
+      return res.render("resetEmail",{
+        title: "Reset Email"
+      });
     }
      else {
       return res.redirect("back");
@@ -188,7 +193,9 @@ module.exports.resetPassword = async function (req, res) {
    {
       resetUserDb.isValid=false;
       resetUserDb.save();
-      return res.render("resetPassword");
+      return res.render("resetPassword",{
+        title: "Reset Password"
+      });
    }
    else{
     req.flash('error','Your link has expired!! Directing you to homepage');
