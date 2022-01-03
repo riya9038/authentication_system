@@ -7,6 +7,8 @@ const fetch= require('isomorphic-fetch');
 const crypto= require('crypto');
 const PasswordManager= require('../services/passwordManager');
 const dotenv= require('dotenv').config();
+const queue= require('../config/kue');
+const emailWorker= require('../workers/email-worker');
 
 //profile page of user
 module.exports.profile = function (req, res) {
@@ -173,7 +175,14 @@ module.exports.resetEmail = async function (req, res) {
         user: user
       }
       
-      resetPasswordMailer.newPassword(resetUser);
+      // resetPasswordMailer.newPassword(resetUser);
+      let job= queue.create('emails',resetUser).save(function(err){
+        if(err){
+          console.log("Error in sending job",err);
+          return;
+        }
+        console.log("job is added to queue");
+      })
       req.flash("success", "Mail sent");
       return res.render("resetEmail",{
         title: "Reset Email"

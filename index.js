@@ -13,6 +13,7 @@ const customMware = require("./config/middleware");
 const multer = require("multer");
 const expressLayouts = require("express-ejs-layouts");
 const path = require("path");
+const queue= require('kue');
 const config= require('dotenv').config();
 
 //firing the app and setting up views
