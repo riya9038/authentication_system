@@ -34,17 +34,17 @@ To use this repository in your local system-
 ###### `git clone https://github.com/riya9038/authentication-system.git`
 
 # Steps to install
-To rum this repository in your system follow the given steps-
-  1.clone the repo on your local system using the above git command 
-  2.run npm install in terminal 
-  3.you need to obtain some keys which are-
-    a. google ouath api keys,
-    b. google recapctha api keys,
-    c.add your credentials to send mail,
-    d.add your own mongoDB cluster
-  4.code has been provided with comment to help you do neccessary changes, go through the directories one by one.
-  5.ater completing above steps, run the app using 'npm start' command.
-  6.open localhost:8000 in your favourite browser.
+To rum this repository in your system follow the given steps-<br>
+  1.clone the repo on your local system using the above git command <br>
+  2.run npm install in terminal <br>
+  3.you need to obtain some keys which are-<br>
+    a. google ouath api keys,<br>
+    b. google recapctha api keys,<br>
+    c.add your credentials to send mail,<br>
+    d.add your own mongoDB cluster<br>
+  4.code has been provided with comment to help you do neccessary changes, go through the directories one by one.<br>
+  5.after completing above steps, run the app using 'npm start' command.<br>
+  6.open localhost:8000 in your favourite browser.<br>
 
 
 
