@@ -34,7 +34,7 @@ To use this repository in your local system-
 ###### `git clone https://github.com/riya9038/authentication-system.git`
 
 # Steps to install
-To rum this repository in your system follow the given steps-<br>
+To run this repository in your system follow the given steps-<br>
   1. Clone the repo on your local system using the above git command <br>
   2. Run npm install in terminal <br>
   3. You need to obtain some keys which are-<br>
