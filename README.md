@@ -35,16 +35,16 @@ To use this repository in your local system-
 
 # Steps to install
 To rum this repository in your system follow the given steps-<br>
-  1.clone the repo on your local system using the above git command <br>
-  2.run npm install in terminal <br>
-  3.you need to obtain some keys which are-<br>
+  1. Clone the repo on your local system using the above git command <br>
+  2. Run npm install in terminal <br>
+  3. You need to obtain some keys which are-<br>
     a. google ouath api keys,<br>
     b. google recapctha api keys,<br>
-    c.add your credentials to send mail,<br>
-    d.add your own mongoDB cluster<br>
-  4.code has been provided with comment to help you do neccessary changes, go through the directories one by one.<br>
-  5.after completing above steps, run the app using 'npm start' command.<br>
-  6.open localhost:8000 in your favourite browser.<br>
+    c. add your credentials to send mail,<br>
+    d. add your own mongoDB cluster<br>
+  4. Code has been provided with comment to help you do neccessary changes, go through the directories one by one<br>
+  5. After completing above steps, run the app using 'npm start' command<br>
+  6. Start localhost:8000 in your favourite browser<br>
 
 
 
