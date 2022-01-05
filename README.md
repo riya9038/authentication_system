@@ -35,7 +35,7 @@ To use this repository in your local system-
 
 # Steps to install
 To run this repository in your system follow the given steps-<br>
-  1. Clone the repo on your local system using the above git command <br>
+  1. Clone the repository on your local system using the above git command <br>
   2. Run npm install in terminal <br>
   3. You need to obtain some keys which are-<br>
     a. google ouath api keys,<br>
